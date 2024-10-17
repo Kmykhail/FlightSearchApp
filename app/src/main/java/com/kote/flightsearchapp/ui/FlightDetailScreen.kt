@@ -2,9 +2,9 @@ package com.kote.flightsearchapp.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -30,6 +30,7 @@ import com.kote.flightsearchapp.data.airport.db.Airport
 import com.kote.flightsearchapp.navigation.NavigationDestination
 import com.kote.flightsearchapp.ui.components.SearchTopBar
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 
 object FlightDestination: NavigationDestination {
     override val rout = "flight_details"
@@ -40,7 +41,7 @@ object FlightDestination: NavigationDestination {
 
 @Composable
 fun FlightDetailScreen(
-    onNavigateUp: (String) -> Unit,
+    onNavigateUp: () -> Unit,
     viewModel: DetailViewModel = viewModel(factory = AppViewModelProvider.FACTORY)
 ) {
     val arrivalAirports by viewModel.arrivalAirports.collectAsState()
@@ -65,18 +66,29 @@ fun FlightDetailScreen(
     }
 
 }
-//
+
 @Composable
 fun SelectedFlights(
     destinationAirports: List<Airport>,
     departureAirport: Airport,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(
-        verticalArrangement = Arrangement.SpaceBetween
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(8.dp)
     ) {
-        items(destinationAirports) {destination ->
-            Flights(destinationAirport = destination, departureAirport = departureAirport, toggleFavorite = { /*TODO*/ })
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            items(destinationAirports) {destination ->
+                Flights(
+                    destinationAirport = destination,
+                    departureAirport = departureAirport,
+                    toggleFavorite = { /*TODO*/ }
+                )
+            }
         }
     }
 }
@@ -90,10 +102,7 @@ private fun Flights(
 ) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        shape = RoundedCornerShape(
-            topEnd = 10.dp,
-            bottomStart = 10.dp
-        ),
+        shape = RoundedCornerShape(topEnd = 10.dp, bottomStart = 10.dp),
         modifier = modifier
     ) {
         Row(
@@ -112,20 +121,44 @@ private fun Flights(
                     ),
                     textAlign = TextAlign.Justify
                 )
-                Row {
-                    Text(text = departureAirport.iataCode)
-                    Text(text = departureAirport.name)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text(
+                        text = departureAirport.iataCode,
+                        style = MaterialTheme.typography.labelLarge,
+                        textAlign = TextAlign.Start,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = departureAirport.name,
+                        style = MaterialTheme.typography.bodyMedium,
+                        maxLines = 1
+                    )
                 }
-                Spacer(modifier = androidx.compose.ui.Modifier.height(8.dp))
+                Spacer(modifier = androidx.compose.ui.Modifier.height(6.dp))
                 Text(
                     text = "ARRIVE",
                     style = MaterialTheme.typography.labelMedium.copy(
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.50f)
                     )
                 )
-                Row {
-                    Text(text = destinationAirport.iataCode)
-                    Text(text = destinationAirport.name)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text(
+                        text = destinationAirport.iataCode,
+                        style = MaterialTheme.typography.labelLarge,
+                        textAlign = TextAlign.Start,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = destinationAirport.name,
+                        style = MaterialTheme.typography.bodyMedium,
+                        maxLines = 1
+                    )
                 }
             }
 

@@ -15,14 +15,14 @@ import androidx.compose.ui.Modifier
 fun SearchTopBar(
     title: String,
     canNavigateBack: Boolean,
-    navigateUp: (String) -> Unit = {},
+    navigateUp: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     if (canNavigateBack) {
         TopAppBar(
             title = { Text(title) },
             navigationIcon = {
-                IconButton(onClick = { navigateUp }) {
+                IconButton(onClick = navigateUp) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = null
