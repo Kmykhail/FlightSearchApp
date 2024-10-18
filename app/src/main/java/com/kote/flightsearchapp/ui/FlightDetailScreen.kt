@@ -17,6 +17,7 @@ import com.kote.flightsearchapp.data.db.Airport
 import com.kote.flightsearchapp.navigation.NavigationDestination
 import com.kote.flightsearchapp.ui.components.SearchTopBar
 import androidx.compose.ui.Modifier
+import com.kote.flightsearchapp.data.db.Favorite
 import com.kote.flightsearchapp.ui.components.FlightCard
 
 object FlightDestination: NavigationDestination {
@@ -48,7 +49,8 @@ fun FlightDetailScreen(
             SelectedFlights(
                 destinations = arrivalAirports,
                 departure = departureAirport!!,
-                detailViewModel = viewModel,
+                toggleFavorite = viewModel::toggleFavorite,
+                favorites = favorites,
                 modifier = Modifier
                     .padding(innerPadding)
             )
@@ -60,7 +62,8 @@ fun FlightDetailScreen(
 fun SelectedFlights(
     destinations: List<Airport>,
     departure: Airport,
-    detailViewModel: DetailViewModel,
+    toggleFavorite: (String, String) -> Unit,
+    favorites: List<Favorite>,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -73,10 +76,14 @@ fun SelectedFlights(
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             items(destinations) {destination ->
+                val isFavorite = favorites.find {
+                    it.destinationCode == destination.iataCode && it.departureCode == departure.iataCode
+                }
                 FlightCard(
                     destinationAirport = destination,
                     departureAirport = departure,
-                    detailViewModel = detailViewModel
+                    toggleFavorite = toggleFavorite,
+                    isFavorite = isFavorite != null
                 )
             }
         }

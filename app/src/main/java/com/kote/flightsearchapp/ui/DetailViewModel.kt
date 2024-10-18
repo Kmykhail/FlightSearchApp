@@ -20,9 +20,6 @@ class DetailViewModel(
 ): ViewModel() {
     private val itemIataCode: String = checkNotNull(savedStateHandle[FlightDestination.itemIdArg])
 
-    private val _isFavorite = MutableStateFlow(false)
-    val isFavorite: StateFlow<Boolean> = _isFavorite
-
     val departureAirport: StateFlow<Airport?> = airportRepository.getAirportByIata(itemIataCode).stateIn(
         scope = viewModelScope,
         started = SharingStarted.Lazily,
@@ -50,15 +47,6 @@ class DetailViewModel(
             airportRepository.saveFavorite(favorite)
         } else {
             airportRepository.removeFavorite(searchedFavorite)
-        }
-    }
-
-    fun checkIfFavorite(departureCode: String, destinationCode: String) {
-        viewModelScope.launch {
-            val favoriteExists = favorites.value.any {
-                it.departureCode == departureCode && it.destinationCode == destinationCode
-            }
-            _isFavorite.update { favoriteExists }
         }
     }
 }

@@ -17,6 +17,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,7 +39,8 @@ import kotlinx.coroutines.launch
 fun FlightCard(
     destinationAirport: Airport,
     departureAirport: Airport,
-    detailViewModel: DetailViewModel,
+    toggleFavorite: (String, String) -> Unit,
+    isFavorite: Boolean,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -102,15 +104,11 @@ fun FlightCard(
                     )
                 }
             }
-            val isFavorite by detailViewModel.isFavorite.collectAsState()
-            val coroutineScope = rememberCoroutineScope()
-
-            coroutineScope.launch {
-                detailViewModel.checkIfFavorite(departureAirport.iataCode, destinationAirport.iataCode)
-            }
 
             IconButton(
-                onClick = { detailViewModel.toggleFavorite(departureAirport.iataCode, destinationAirport.iataCode) },
+                onClick = {
+                    toggleFavorite(departureAirport.iataCode, destinationAirport.iataCode)
+                },
             ) {
                 Icon(
                     imageVector = Icons.Default.Star,
