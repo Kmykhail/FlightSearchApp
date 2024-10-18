@@ -1,19 +1,11 @@
 package com.kote.flightsearchapp.ui
 
-import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kote.flightsearchapp.data.airport.AirportRepository
-import com.kote.flightsearchapp.data.airport.db.Airport
+import com.kote.flightsearchapp.data.AirportRepository
+import com.kote.flightsearchapp.data.db.Airport
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 

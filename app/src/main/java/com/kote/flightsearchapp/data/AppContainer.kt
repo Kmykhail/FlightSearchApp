@@ -1,10 +1,7 @@
 package com.kote.flightsearchapp.data
 
-import android.app.Application
 import android.content.Context
-import com.kote.flightsearchapp.data.airport.AirportRepository
-import com.kote.flightsearchapp.data.airport.OfflineAirportRepository
-import com.kote.flightsearchapp.data.airport.db.AirportDatabase
+import com.kote.flightsearchapp.data.db.AirportDatabase
 
 interface AppContainer {
     val airportRepository: AirportRepository

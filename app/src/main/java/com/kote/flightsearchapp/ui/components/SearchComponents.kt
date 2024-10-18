@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.kote.flightsearchapp.data.airport.db.Airport
+import com.kote.flightsearchapp.data.db.Airport
 import com.kote.flightsearchapp.ui.theme.FlightSearchAppTheme
 
 @Composable

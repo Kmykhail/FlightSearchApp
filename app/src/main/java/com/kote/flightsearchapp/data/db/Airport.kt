@@ -1,4 +1,4 @@
-package com.kote.flightsearchapp.data.airport.db
+package com.kote.flightsearchapp.data.db
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
