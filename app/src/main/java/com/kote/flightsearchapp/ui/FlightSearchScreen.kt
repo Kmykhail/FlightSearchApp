@@ -5,6 +5,7 @@ package com.kote.flightsearchapp.ui
 import android.util.Log
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -71,17 +72,21 @@ fun FlightSearchScreen(
                 userInput = uiState.userInput,
                 onSearch = viewModel::searchAirport,
             )
-            SearchListResult(
-                airports = uiState.matchedAirports,
-                onAirportClick = navToFlightDetails,
-                modifier = modifier.padding(vertical = 4.dp)
-            )
-            if (uiState.favorites.isNotEmpty()) {
-                FavoriteList(
-                    favorites = uiState.favorites,
-                    getAirport = viewModel::getAirportByCode,
-                    toggleFavorite = viewModel::toggleFavorite
-                )
+            Box(modifier = modifier.padding(vertical = 4.dp)) {
+                if (uiState.matchedAirports.isEmpty() && uiState.favorites.isNotEmpty()) {
+                    FavoriteList(
+                        favorites = uiState.favorites,
+                        getAirport = viewModel::getAirportByCode,
+                        toggleFavorite = viewModel::toggleFavorite
+                    )
+                }
+                if (uiState.matchedAirports.isNotEmpty()) {
+                    SearchListResult(
+                        airports = uiState.matchedAirports,
+                        onAirportClick = navToFlightDetails,
+                        modifier = modifier.padding(vertical = 4.dp)
+                    )
+                }
             }
         }
     }
@@ -91,10 +96,12 @@ fun FlightSearchScreen(
 fun FavoriteList(
     favorites: List<Favorite>,
     getAirport: (String) -> Airport?,
-    toggleFavorite: (String, String) -> Unit
+    toggleFavorite: (String, String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(6.dp)
+        verticalArrangement = Arrangement.spacedBy(6.dp),
+        modifier = modifier.padding(8.dp)
     ) {
         items(favorites) {favorite ->
             val destination = getAirport(favorite.destinationCode)
