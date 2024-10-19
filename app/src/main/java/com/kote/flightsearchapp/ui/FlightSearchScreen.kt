@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
@@ -31,7 +33,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.kote.flightsearchapp.R
+import com.kote.flightsearchapp.data.db.Airport
+import com.kote.flightsearchapp.data.db.Favorite
 import com.kote.flightsearchapp.navigation.NavigationDestination
+import com.kote.flightsearchapp.ui.components.FlightCard
 import com.kote.flightsearchapp.ui.components.SearchField
 import com.kote.flightsearchapp.ui.components.SearchListResult
 import com.kote.flightsearchapp.ui.components.SearchTopBar
@@ -66,16 +71,42 @@ fun FlightSearchScreen(
                 userInput = uiState.userInput,
                 onSearch = viewModel::searchAirport,
             )
-            when(uiState.showResult) {
-                ShowResult.SEARCH -> SearchListResult(
-                    airports = uiState.airports,
-                    onAirportClick = navToFlightDetails,
-                    modifier = modifier.padding(vertical = 4.dp)
+            SearchListResult(
+                airports = uiState.matchedAirports,
+                onAirportClick = navToFlightDetails,
+                modifier = modifier.padding(vertical = 4.dp)
+            )
+            if (uiState.favorites.isNotEmpty()) {
+                FavoriteList(
+                    favorites = uiState.favorites,
+                    getAirport = viewModel::getAirportByCode,
+                    toggleFavorite = viewModel::toggleFavorite
                 )
-                ShowResult.FAVORITE -> {}
-                else -> Unit
             }
         }
+    }
+}
 
+@Composable
+fun FavoriteList(
+    favorites: List<Favorite>,
+    getAirport: (String) -> Airport?,
+    toggleFavorite: (String, String) -> Unit
+) {
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        items(favorites) {favorite ->
+            val destination = getAirport(favorite.destinationCode)
+            val departure = getAirport(favorite.departureCode)
+            if (destination != null && departure != null) {
+                FlightCard(
+                    destinationAirport = destination,
+                    departureAirport = departure,
+                    toggleFavorite = toggleFavorite,
+                    isFavorite = true
+                )
+            }
+        }
     }
 }
