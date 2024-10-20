@@ -77,7 +77,7 @@ fun FlightSearchScreen(
                     FavoriteList(
                         favorites = uiState.favorites,
                         getAirport = viewModel::getAirportByCode,
-                        toggleFavorite = viewModel::toggleFavorite
+                        removeFavorite = viewModel::removeFavorite
                     )
                 }
                 if (uiState.matchedAirports.isNotEmpty()) {
@@ -96,7 +96,7 @@ fun FlightSearchScreen(
 fun FavoriteList(
     favorites: List<Favorite>,
     getAirport: (String) -> Airport?,
-    toggleFavorite: (String, String) -> Unit,
+    removeFavorite: (String, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -110,7 +110,7 @@ fun FavoriteList(
                 FlightCard(
                     destinationAirport = destination,
                     departureAirport = departure,
-                    toggleFavorite = toggleFavorite,
+                    toggleFavorite = removeFavorite,
                     isFavorite = true
                 )
             }

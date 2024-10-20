@@ -71,6 +71,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     implementation("androidx.navigation:navigation-compose:2.7.3")
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     //noinspection UseTomlInstead
     implementation("androidx.compose.material:material-icons-extended")

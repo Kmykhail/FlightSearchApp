@@ -8,9 +8,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -37,7 +39,13 @@ fun SearchField(
         onValueChange = { onSearch(it) },
         placeholder = { Text(text = "Enter departure airport") },
         leadingIcon = { Icon(imageVector = Icons.Default.Search, contentDescription = null) },
-        trailingIcon = { Icon(imageVector = Icons.Default.Mic, contentDescription = null) },
+        trailingIcon = {
+            if (userInput.isNotEmpty()) {
+                IconButton(onClick = { onSearch("") }) {
+                    Icon(imageVector = Icons.Default.Clear, contentDescription = null)
+                }
+            }
+        },
         singleLine = true,
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,

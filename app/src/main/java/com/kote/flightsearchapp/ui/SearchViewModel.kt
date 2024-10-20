@@ -1,8 +1,12 @@
 package com.kote.flightsearchapp.ui
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kote.flightsearchapp.data.AirportRepository
+import com.kote.flightsearchapp.data.UserPreferencesRepository
 import com.kote.flightsearchapp.data.db.Airport
 import com.kote.flightsearchapp.data.db.Favorite
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,9 +25,14 @@ enum class ShowResult {
     SEARCH, FAVORITE
 }
 
-class SearchViewModel(private val airportRepository: AirportRepository) : ViewModel() {
+class SearchViewModel(
+    private val airportRepository: AirportRepository,
+    private val userPreferencesRepository: UserPreferencesRepository
+) : ViewModel() {
     private val _uiState = MutableStateFlow(SearchUiState())
     val uiState = _uiState.asStateFlow()
+
+    var userInput by mutableStateOf("")
 
     private val favoritesFlow: StateFlow<List<Favorite>> = airportRepository.getAllFavorites().stateIn(
         scope = viewModelScope,
@@ -38,6 +47,14 @@ class SearchViewModel(private val airportRepository: AirportRepository) : ViewMo
     )
 
     init {
+        viewModelScope.launch {
+            userPreferencesRepository.getSavedUserInput().collect{
+                if (it.isNotBlank()) {
+                    searchAirport(it)
+                }
+            }
+        }
+
         viewModelScope.launch {
             favoritesFlow.collect{ collectedFavorites ->
                 _uiState.update { it.copy(favorites = collectedFavorites) }
@@ -55,22 +72,19 @@ class SearchViewModel(private val airportRepository: AirportRepository) : ViewMo
         _uiState.update { it.copy(userInput = input) }
         if (input.isNotEmpty() && input.isNotBlank()) {
             viewModelScope.launch {
+                userPreferencesRepository.saveUserInputPreference(userInput = input)
                 val matchedList = airportRepository.getMatchedAirports(input)
                 _uiState.update { it.copy(matchedAirports = matchedList, showResult = ShowResult.SEARCH) }
             }
         }
+        if (input.isEmpty()) {
+            _uiState.update { it.copy(matchedAirports = emptyList()) }
+        }
     }
 
-    fun toggleFavorite(departureCode: String, destinationCode: String) = viewModelScope.launch {
-        val favorite = Favorite(departureCode = departureCode, destinationCode = destinationCode)
-        val searchedFavorite = favoritesFlow.value.find {
-            it.departureCode == favorite.departureCode && it.destinationCode == favorite.destinationCode
-        }
-        if (searchedFavorite == null) {
-            airportRepository.saveFavorite(favorite)
-        } else {
-            airportRepository.removeFavorite(searchedFavorite)
-        }
+    fun removeFavorite(departureCode: String, destinationCode: String) = viewModelScope.launch{
+        favoritesFlow.value.find { it.departureCode == departureCode && it.destinationCode == destinationCode }
+            ?.let { airportRepository.removeFavorite(it) }
     }
 
     fun getAirportByCode(iataCode: String) : Airport? {
