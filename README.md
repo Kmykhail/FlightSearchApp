@@ -1,6 +1,12 @@
 ## Flight Search App
 The Flight Search App is a project based on the [Google Android Basics with Compose Course](https://developer.android.com/codelabs/basic-android-kotlin-compose-flight-search) lab. It allows users to search for flights by entering airport names or IATA identifiers and view available flight routes from their selected airport. This project demonstrates skills in SQL, Room, and DataStore.
 
+### Images
+<img src="https://github.com/user-attachments/assets/a88dcafa-c726-440d-b9fa-08fa61f0358f" width="250"/>
+<img src="https://github.com/user-attachments/assets/d17eb78f-41d0-4776-bfb9-2bf89ec4b905" width="250"/>
+<img src="https://github.com/user-attachments/assets/83bbe9ec-d6c4-48e0-8434-a1637d4c342f" width="250"/>
+
+
 ### Features
 - Search Airports: Enter an airport name or IATA code to get autocomplete suggestions from the database.
 - View Flight Routes: See a list of available flights from the selected airport with destination airport details.
